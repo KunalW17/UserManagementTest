@@ -3,17 +3,17 @@ const bodyParser = require('body-parser');
 const uuid = require('uuid');
 const path = require('path');
 
-
 const app = express();
 const PORT = 3000;
+var count= 0;
 
-// Middleware
+
 app.use(bodyParser.json());
 
-// Serve static files from the 'public' directory
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Sample in-memory database to store user data
+// Sample array to store user data
 let users = [];
 
 // Create a new user
@@ -32,7 +32,7 @@ app.post('/api/users', (req, res) => {
 
   // Create new user object
   const newUser = {
-    id: uuid.v4(),
+    id: ++count,
     username,
     email,
     role,
@@ -49,7 +49,7 @@ app.post('/api/users', (req, res) => {
 // Get user by ID
 app.get('/api/users/:id', (req, res) => {
   const userId = req.params.id;
-  const user = users.find(user => user.id === userId);
+  const user = users.find(user => user.id == userId);
 
   if (!user) {
     return res.status(404).json({ message: 'User not found' });
@@ -81,7 +81,7 @@ app.put('/api/users/:id', (req, res) => {
   const { username, email, role } = req.body;
 
   // Find the user by ID
-  const userIndex = users.findIndex(user => user.id === userId);
+  const userIndex = users.findIndex(user => user.id == userId);
 
   if (userIndex === -1) {
     return res.status(404).json({ message: 'User not found' });
@@ -104,7 +104,7 @@ app.delete('/api/users/:id', (req, res) => {
   const userId = req.params.id;
 
   // Find user index by ID
-  const userIndex = users.findIndex(user => user.id === userId);
+  const userIndex = users.findIndex(user => user.id == userId);
 
   if (userIndex === -1) {
     return res.status(404).json({ message: 'User not found' });
